@@ -1,5 +1,6 @@
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 import { z } from 'zod/v4';
+import { generateEmbeddings, transcribeAudio } from '../../services/gemini.ts';
 
 export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
@@ -20,10 +21,18 @@ export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
       }
 
       //1. Transcrever o áudio
+      const audioBuffer = await audio.toBuffer();
+      const audioAsBase64 = audioBuffer.toString('base64');
+      const transcription = await transcribeAudio(
+        audioAsBase64,
+        audio.mimetype
+      );
 
       //2. Gerar o vetor semântico / embeddings
 
       //3. Armezenar os vetores no banco de dados
+
+      return { transcription };
     }
   );
 };
