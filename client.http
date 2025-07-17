@@ -46,7 +46,7 @@ POST {{baseUrl}}/rooms/{{roomIdFilled}}/questions
 Content-Type: application/json
 
 {
-    "question": "O que é react?"
+    "question": "O que é Vue.js e a sua diferença em relação ao Angular?"
 }
 
 
