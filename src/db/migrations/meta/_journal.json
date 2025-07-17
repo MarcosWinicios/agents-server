@@ -15,6 +15,13 @@
       "when": 1752438741892,
       "tag": "0001_whole_lady_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752712289097,
+      "tag": "0002_nifty_killmonger",
+      "breakpoints": true
     }
   ]
 }
