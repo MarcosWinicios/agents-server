@@ -1,5 +1,8 @@
+import { error } from 'console';
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 import { z } from 'zod/v4';
+import { db } from '../../db/connection.ts';
+import { schema } from '../../db/schema/index.ts';
 import { generateEmbeddings, transcribeAudio } from '../../services/gemini.ts';
 
 export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
@@ -32,7 +35,22 @@ export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
       const embeddings = await generateEmbeddings(transcription);
       //3. Armezenar os vetores no banco de dados
 
-      return { transcription, embeddings };
+      const result = await db
+        .insert(schema.audioChunks)
+        .values({
+          roomId,
+          transcription,
+          embeddings,
+        })
+        .returning();
+
+      const chunk = result[0];
+
+      if (!chunk) {
+        throw new Error('Error saving audio');
+      }
+
+      return reply.status(201).send({ chunkId: chunk.id });
     }
   );
 };
