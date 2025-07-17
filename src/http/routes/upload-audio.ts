@@ -29,10 +29,10 @@ export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
       );
 
       //2. Gerar o vetor semântico / embeddings
-
+      const embeddings = await generateEmbeddings(transcription);
       //3. Armezenar os vetores no banco de dados
 
-      return { transcription };
+      return { transcription, embeddings };
     }
   );
 };
