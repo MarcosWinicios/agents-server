@@ -66,7 +66,9 @@ export async function generateAnswer(
     - Seja objetivo;
     - Mantenha um tom educativo e profissional;
     - Cite trechos relevantes do contexto se apropriado;
-    - Se for citar o contexto, utilize o termo "conteúdo da aula"
+    - Se for citar o contexto, utilize o termo "conteúdo da sala";
+    - Se for questionado qual o assunto, ou for pedido para fazer um resumo. Faça uma análise do contexto e monte um resumo.
+    - Capriche e se esforce para atender as instruções.
 
   `.trim();
 
