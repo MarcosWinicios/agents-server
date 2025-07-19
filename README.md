@@ -1,100 +1,212 @@
-# Agents
+# Agents Server
 
-Projeto desenvolvido durante um evento da **Rocketseat** utilizando tecnologias modernas para criação de uma API robusta e eficiente.
+O **Agents Server** permite criar salas para gravação de áudios e realizar perguntas que são respondidas por IA com base no conteúdo gravado.
 
-## 🚀 Tecnologias
+O projeto web pode ser encontrado **[aqui](https://github.com/MarcosWinicios/agents-web)**.
 
-- **Node.js** com TypeScript nativo (experimental strip types)
-- **Fastify** - Framework web rápido e eficiente
-- **PostgreSQL** com extensão **pgvector** para vetores
-- **Drizzle ORM** - Type-safe database operations
-- **Zod** - Schema validation
-- **Docker** - Containerização do banco de dados
-- **Biome** - Linting e formatação de código
+## Tecnologias e Bibliotecas Utilizadas
 
-## 🏗️ Arquitetura
-
-O projeto segue uma arquitetura modular com:
-
-- **Separação de responsabilidades** entre rotas, schemas e conexão com banco
-- **Validação de schemas** com Zod para type safety
-- **ORM type-safe** com Drizzle para operações de banco de dados
-- **Validação de variáveis de ambiente** centralizadas
-
-## ⚙️ Setup e Configuração
-
-### Pré-requisitos
-
-- Node.js (versão com suporte a `--experimental-strip-types`)
-- Docker e Docker Compose
-
-### 1. Clone o repositório
-
-```bash
-git clone <url-do-repositorio>
-cd server
-```
-
-### 2. Configure o banco de dados
-
-```bash
-docker-compose up -d
-```
-
-### 3. Configure as variáveis de ambiente
-
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-PORT=3333
-DATABASE_URL=postgresql://docker:docker@localhost:5432/agents
-```
-
-### 4. Instale as dependências
-
-```bash
-npm install
-```
-
-### 5. Execute as migrações do banco
-
-```bash
-npx drizzle-kit migrate
-```
-
-### 6. (Opcional) Popule o banco com dados de exemplo
-
-```bash
-npm run db:seed
-```
-
-### 7. Execute o projeto
-
-**Desenvolvimento:**
-
-```bash
-npm run dev
-```
-
-**Produção:**
-
-```bash
-npm start
-```
-
-## 📚 Scripts Disponíveis
-
-- `npm run dev` - Executa o servidor em modo de desenvolvimento com hot reload
-- `npm start` - Executa o servidor em modo de produção
-- `npm run db:seed` - Popula o banco de dados com dados de exemplo
-
-## 🌐 Endpoints
-
-A API estará disponível em `http://{{server}}:3333`
-
-- `GET /health` - Health check da aplicação
-- `GET /rooms` - Lista as salas disponíveis
+- **[NodeJS](https://nodejs.org/pt)** – Ambiente de execução JavaScript no servidor
+- **[Fastify](https://www.fastify.io/)** – Framework Node.js rápido e de baixa sobrecarga.
+  - **Fastify/cors e Fastify/multipart** – CORS e upload de arquivos via Fastify.
+- **[TypeScript](https://www.typescriptlang.org/)** – Tipagem estática para maior segurança e clareza.
+- **[Drizzle ORM](https://orm.drizzle.team/)** – ORM moderno e leve para PostgreSQL.
+- **[Zod](https://zod.dev/)** – Validação e tipagem de dados.
+- **[Google/genai](https://www.npmjs.com/package/@google/genai)** – Integração com Google Generative AI.
+- **[Biome](https://biomejs.dev/pt-br/)** – Linter e formatter.
+- **[PostgreSQL](https://www.postgresql.org/)** – Banco de dados relacional robusto e open source.
 
 ---
 
-Desenvolvido com ❤️ durante o NLW da Rocketseat
+## Padrões e Organização
+
+- **Fastify com TypeScript e Zod** para schemas de rotas e validações.
+- **Drizzle ORM** para migrations, seeds e consultas tipadas.
+- **Variáveis de ambiente** são gerenciadas em arquivos `.env`.
+- **Scripts de banco de dados** para gerar, migrar e popular dados.
+- **Pgvector** para realizar consultar por similaridade.
+- **Gemini AI** para gerar respostas com base na transcrição de áudio.
+
+---
+
+## Banco de dados
+
+<img src="./assets/database-diagram.png" width="480"/>
+
+## Scripts disponíveis
+
+- `npm run dev` – Executa o servidor em modo desenvolvimento.
+- `npm start` – Executa o servidor em produção.
+- `npm run db:generate` – Gera artefatos do Drizzle ORM.
+- `npm run db:migrate` – Executa as migrations do banco de dados.
+- `npm run db:seed` – Executa os seeds no banco de dados.
+
+---
+
+## Configuração e Execução
+
+1️⃣ **Clone o repositório:**
+
+```bash
+  git clone git@github.com:MarcosWinicios/agents-server.git
+```
+
+2️⃣ **Instale as dependências:**
+
+```bash
+  npm install
+```
+
+3️⃣ **Configure as variáveis de ambiente:**
+Copie o arquivo de exemplo:
+
+```bash
+  cp .env.example .env
+```
+
+Edite o arquivo .env conforme seu ambiente (credenciais do banco PostgreSQL, API Key da GenAI, etc).
+
+4️⃣ **Configure o banco de dados:**
+
+- Execute as migrations para criar as tabelas necessárias:
+
+```bash
+  npm run db:generate
+
+  npm run db:migrate
+```
+
+- Opcional: Execute os seeds para popular o banco com dados iniciais:
+
+```bash
+  npm run db:seed
+```
+
+5️⃣ **Inicie o servidor em modo desenvolvimento:**
+
+```bash
+  npm run dev
+```
+
+O servidor estará disponível na porta configurada em seu .env.
+
+## API Endpoints
+
+### Health Check
+
+`GET /health`  
+Verifica se o servidor está online.
+
+**Response:**
+
+- `200 OK`
+
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+### Listar Salas
+
+**GET** `/rooms`  
+Retorna a lista de salas criadas.
+
+**Response:**
+
+- `200 OK`
+
+```json
+[
+  {
+    "id": "uuid",
+    "name": "Nome da sala",
+    "description": "Descrição da sala"
+  }
+]
+```
+
+---
+
+### Criar Sala
+
+**POST** `/rooms`  
+Cria uma nova sala.
+
+**Request Body:**
+
+```json
+{
+  "name": "Sala de teste",
+  "description": "Essa é uma sala de teste"
+}
+```
+
+**Response:**
+
+- `201 Created`
+
+```json
+{
+  "roomId": "uuid"
+}
+```
+
+---
+
+### Listar Perguntas de uma Sala
+
+**GET** `/rooms/{roomId}/questions`  
+Retorna todas as perguntas vinculadas a uma sala específica.
+
+**Params:**
+
+- `roomId` – UUID da sala
+
+**Response:**
+
+- `200 OK`
+
+```json
+[
+  {
+    "id": "uuid",
+    "question": "Conteúdo da pergunta"
+  }
+]
+```
+
+---
+
+### Criar Pergunta em uma Sala
+
+**POST** `/rooms/{roomId}/questions`  
+Cria uma nova pergunta em uma sala específica.
+
+**Params:**
+
+- `roomId` – UUID da sala
+
+**Request Body:**
+
+```json
+{
+  "question": "O que é Vue.js e a sua diferença em relação ao Angular?"
+}
+```
+
+**Response:**
+
+- `201 Created`
+
+```json
+{
+  "questionId": "uuid"
+}
+```
+
+---
+
+Projeto desenvolvido durante um evento da **Rocketseat**.
