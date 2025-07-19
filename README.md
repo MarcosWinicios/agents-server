@@ -2,7 +2,7 @@
 
 O **Agents Server** permite criar salas para gravação de áudios e realizar perguntas que são respondidas por IA com base no conteúdo gravado.
 
-O projeto web pode ser encontrado **[aqui](https://github.com/MarcosWinicios/agents-web)**.
+O projeto web(frontend) pode ser encontrado **[aqui](https://github.com/MarcosWinicios/agents-web)**.
 
 ## Tecnologias e Bibliotecas Utilizadas
 
